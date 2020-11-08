@@ -16,14 +16,26 @@ class CharacterDetails extends Component {
     };
   }
 
+ componentDidUpdate (prevProps) {
+    const {match : {params: {characterId } } } = this.props;
+    const prevPropsId = prevProps.match.params.characterId;
+    if (prevPropsId !== characterId) {
+      this.loadCharacterDetails(characterId);
+    }
+ }
+
   componentDidMount() {
-    const characterId = this.props.match.params.characterId;
+    const { match: { params: { characterId } } } = this.props;
     this.loadCharacterDetails(characterId);
   }
 
   loadCharacterDetails(characterId) {
-    const url = `https://my-json-server.typicode.com/WildCodeSchool/starwars-api/characters/${characterId}`;
-    // Use axios to get data from the url
+    axios.get(`https://my-json-server.typicode.com/WildCodeSchool/starwars-api/characters/${characterId}`)
+    .then(response => response.data)
+    .then(data => {
+      console.log(data)
+      this.setState({character: data});
+    });
   }
 
   render() {
